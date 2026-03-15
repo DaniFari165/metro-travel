@@ -1,0 +1,13 @@
+codigo,nombre,requiere_visa
+CCS,Caracas,False
+AUA,Aruba,True
+BON,Bonaire,True
+CUR,Curazao,True
+SXM,San Martín,True
+SDQ,Santo Domingo,True
+SBH,San Bartolomé,False
+POS,Puerto España,False
+BGI,Barbados,False
+FDF,Fort de France,False
+PTP,Point a Pitre,False
+PAP,Port Au Prince,False
