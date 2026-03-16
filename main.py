@@ -1,5 +1,6 @@
 from services.cargador_datos import CargadorDatos
 from services.planificador_rutas import PlanificadorRutas
+from services.visualizador_rutas import VisualizadorRutas
 from graph.grafo import Grafo
 
 
@@ -37,7 +38,28 @@ def leer_criterio():
         print("Opción inválida. Intente nuevamente.")
 
 
-def mostrar_resultado(resultado):
+def leer_desea_grafico():
+    while True:
+        respuesta = input("¿Desea ver la ruta gráficamente? (s/n): ").strip().lower()
+
+        if respuesta in ("s", "si", "sí"):
+            return True
+
+        if respuesta in ("n", "no"):
+            return False
+
+        print("Entrada inválida. Escriba 's' o 'n'.")
+
+
+def formatear_ruta_con_nombres(ruta, aeropuertos):
+    partes = []
+    for codigo in ruta:
+        nombre = aeropuertos[codigo].nombre
+        partes.append(f"{codigo} ({nombre})")
+    return " -> ".join(partes)
+
+
+def mostrar_resultado(resultado, aeropuertos):
     print("\n--- RESULTADO ---")
 
     if not resultado["exito"]:
@@ -45,11 +67,12 @@ def mostrar_resultado(resultado):
         return
 
     print("Ruta encontrada:")
-    print(" -> ".join(resultado["ruta"]))
+    print(formatear_ruta_con_nombres(resultado["ruta"], aeropuertos))
 
     if resultado["criterio"] == "costo":
         print(f"Costo total: {resultado['costo_total']}")
-        print(f"Cantidad de vuelos: {resultado['escalas']}")
+        print(f"Cantidad de vuelos: {resultado['cantidad_vuelos']}")
+        print(f"Escalas: {resultado['escalas']}")
     else:
         print(f"Cantidad mínima de vuelos: {resultado['cantidad_vuelos']}")
         print(f"Escalas: {resultado['escalas']}")
@@ -85,7 +108,16 @@ def main():
         criterio = leer_criterio()
 
         resultado = planificador.calcular_ruta(origen, destino, tiene_visa, criterio)
-        mostrar_resultado(resultado)
+        mostrar_resultado(resultado, aeropuertos)
+
+        if resultado["exito"]:
+            ver_grafico = leer_desea_grafico()
+            if ver_grafico:
+                VisualizadorRutas.dibujar_grafo(
+                    grafo,
+                    ruta=resultado["ruta"],
+                    titulo=f"Ruta óptima: {origen} -> {destino}"
+                )
 
         continuar = input("\n¿Desea consultar otra ruta? (s/n): ").strip().lower()
         if continuar not in ("s", "si", "sí"):

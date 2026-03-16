@@ -30,6 +30,19 @@ class Grafo:
     def obtener_vertices(self):
         return list(self.adyacencias.keys())
 
+    def obtener_aristas_unicas(self):
+        aristas = []
+        vistas = set()
+
+        for origen, vecinos in self.adyacencias.items():
+            for destino, precio in vecinos:
+                clave = tuple(sorted([origen, destino]))
+                if clave not in vistas:
+                    vistas.add(clave)
+                    aristas.append((origen, destino, precio))
+
+        return aristas
+
     def __str__(self):
         lineas = []
         for vertice, vecinos in self.adyacencias.items():

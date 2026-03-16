@@ -64,7 +64,8 @@ class PlanificadorRutas:
 
         if criterio == "costo":
             resultado["costo_total"] = valor
-            resultado["escalas"] = len(ruta) - 1
+            resultado["cantidad_vuelos"] = len(ruta) - 1
+            resultado["escalas"] = max(0, len(ruta) - 2)
         else:
             resultado["cantidad_vuelos"] = valor
             resultado["escalas"] = max(0, len(ruta) - 2)
